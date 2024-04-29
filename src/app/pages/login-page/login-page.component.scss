@@ -1,0 +1,31 @@
+:host {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+mat-card {
+  margin-bottom: 10em;
+  text-align: center;
+}
+
+h3 {
+  margin: 1.5em 0;
+  font-size: large;
+  font-weight: bold;
+}
+
+mat-form-field {
+  width: 100%;
+  margin: 1em 0;
+}
+
+#login-button {
+  margin-bottom: 1.5em;
+}
+
+.server-error {
+  margin: 8px 0;
+}

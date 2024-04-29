@@ -1,0 +1,62 @@
+<mat-card>
+
+  <mat-card-content>
+
+    <form [formGroup]="form">
+
+      <mat-form-field>
+        <mat-label>Hová</mat-label>
+        <input type="text"
+               matInput
+               formControlName="from"
+               [matAutocomplete]="fromWhere">
+        <mat-autocomplete #fromWhere="matAutocomplete">
+          @for (option of fromFilteredOptions | async; track option) {
+            <mat-option [value]="option">{{option}}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Hová</mat-label>
+        <input type="text"
+               matInput
+               formControlName="to"
+               [matAutocomplete]="toWhere">
+        <mat-autocomplete #toWhere="matAutocomplete">
+          @for (option of toFilteredOptions | async; track option) {
+            <mat-option [value]="option">{{option}}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Mikor?</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="when"
+        >
+        <mat-hint>ÉÉÉÉ/HH/NN</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-radio-group formControlName="timeType">
+        <mat-radio-button value="departure">indulás</mat-radio-button>
+        <mat-radio-button value="arrival">érkezés</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-radio-group formControlName="discounts">
+        <mat-radio-button value="none">nincs</mat-radio-button>
+        <mat-radio-button value="50">50%</mat-radio-button>
+        <mat-radio-button value="90">90%</mat-radio-button>
+      </mat-radio-group>
+
+      <button mat-raised-button type="submit" color="primary">Keresés</button>
+
+    </form>
+
+  </mat-card-content>
+
+
+</mat-card>

@@ -1,0 +1,52 @@
+<mat-card>
+
+
+  <mat-card-content>
+
+    <h3>BEJELENTKEZÉS</h3>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <mat-form-field>
+        <input
+          matInput
+          formControlName="email"
+          type="email"
+          placeholder="Email"
+          autocomplete="off"
+        />
+
+        <mat-error *ngIf="emailControl.invalid && emailControl.touched">
+          Kérjük, adjon meg egy valódi email címet.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          formControlName="password"
+          type="password"
+          placeholder="Password"
+          autocomplete="off"
+        />
+        <mat-error *ngIf="passwordControl.invalid && passwordControl.touched">
+          A jelszónak legalább 6 karakter hosszúnak kell lennie.
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        id="login-button"
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="(emailControl.invalid || passwordControl.invalid) || loading"
+      >
+        Bejelentkezés
+      </button>
+
+    </form>
+
+    <div>{{ this.serverMessage }}</div>
+  </mat-card-content>
+
+</mat-card>

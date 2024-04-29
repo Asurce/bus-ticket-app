@@ -1,0 +1,21 @@
+.sidenav-container {
+  height: 100%;
+}
+
+div {
+  display: flex;
+  align-items: center;
+
+  h1 {
+    margin-right: 30px;
+    font-size: x-large;
+    cursor: pointer;
+  }
+
+  img {
+    position: relative !important;
+    width: 56px;
+    height: 56px;
+    margin-right: 15px;
+  }
+}
