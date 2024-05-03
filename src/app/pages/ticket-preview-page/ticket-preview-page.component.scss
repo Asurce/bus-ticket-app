@@ -4,16 +4,15 @@
   flex-direction: column;
   width: var(--login-width);
   margin: auto;
+  padding: 2em 0;
 }
 
-mat-card {
-  padding: 1em;
-}
 
 mat-card-content {
   display: flex;
   flex-direction: column;
   gap: 2em;
+  padding: 2em;
 }
 
 img {
@@ -85,4 +84,41 @@ img {
     font-weight: bold;
     line-height: 1em;
   }
+}
+
+@media only screen and (max-width: 600px) {
+
+  :host {
+    font-size: 0.7rem;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .data {
+    gap: unset;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .purchase {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      align-self: flex-end;
+      margin: 0;
+    }
+  }
+
+  #buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
 }

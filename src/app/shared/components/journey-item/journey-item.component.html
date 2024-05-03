@@ -1,29 +1,38 @@
-<mat-card>
+<mat-card *ngIf="journey">
 
   <mat-card-content>
     <div class="data">
       <div class="origin">
-        <div class="date">{{journey.departTime | date:'YYYY.MM.dd.'}}</div>
-        <div class="hour">{{journey.departTime | date:'HH:mm'}}</div>
-        <div class="city">{{journey.originCity.name}}</div>
+        <div class="date">{{ journey.departTime | date:'YYYY.MM.dd.' }}</div>
+        <div class="hour">{{ journey.departTime | date:'HH:mm' }}</div>
+        <div class="city">{{ journey.originCity.name }}</div>
       </div>
       <div class="journey">
-        <div>{{journey.distance}} km</div>
+        <div>{{ journey.distance }} km</div>
         <div class="journey-line"></div>
-        <div>{{journey.travelTime}} perc</div>
+        <div>{{ journey.travelTime }} perc</div>
       </div>
       <div class="destination">
-        <div class="date">{{journey.arriveTime | date:'YYYY.MM.dd.'}}</div>
-        <div class="hour">{{journey.arriveTime | date:'HH:mm'}}</div>
-        <div class="city">{{journey.destCity.name}}</div>
+        <div class="date">{{ journey.arriveTime | date:'YYYY.MM.dd.' }}</div>
+        <div class="hour">{{ journey.arriveTime | date:'HH:mm' }}</div>
+        <div class="city">{{ journey.destCity.name }}</div>
       </div>
     </div>
 
     <div class="purchase">
-        <div class="discount">{{journey.discount | discount}}</div>
-        <div class="price">{{journey.price}} Ft</div>
-        <button mat-raised-button color="primary" (click)="purchase.emit(journey)">VÁSÁRLÁS</button>
+      <div class="discount">{{ journey.discount | discount }}</div>
+      <div class="price">{{ journey.price }} Ft</div>
+      <button mat-raised-button color="primary" (click)="purchase.emit(journey)">VÁSÁRLÁS</button>
     </div>
 
   </mat-card-content>
+</mat-card>
+
+
+<mat-card *ngIf="!journey">
+
+  <mat-card-content>
+    Nincs induló járat...
+  </mat-card-content>
+
 </mat-card>

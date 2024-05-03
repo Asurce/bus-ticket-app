@@ -2,31 +2,32 @@
 
 <table mat-table [dataSource]="tickets" class="mat-elevation-z8">
 
-  <ng-container matColumnDef="departureAirport">
+  <ng-container matColumnDef="originCity">
     <th mat-header-cell *matHeaderCellDef> Honnan</th>
-    <td mat-cell *matCellDef="let element"> {{element.originCity}} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.originCity }}</td>
   </ng-container>
 
-  <ng-container matColumnDef="destinationAirport">
+  <ng-container matColumnDef="destCity">
     <th mat-header-cell *matHeaderCellDef> Hova</th>
-    <td mat-cell *matCellDef="let element"> {{element.destCity}} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.destCity }}</td>
   </ng-container>
 
-  <ng-container matColumnDef="departureDate">
-    <th mat-header-cell *matHeaderCellDef> Indulási idő</th>
-    <td mat-cell *matCellDef="let element"> {{element.departTime.toMillis() | date:'YYYY.MM.dd. HH:mm'}} </td>
+  <ng-container matColumnDef="departureTime">
+    <th mat-header-cell *matHeaderCellDef> Indulás</th>
+    <td mat-cell *matCellDef="let element"> {{ element.departTime.toMillis() | date:'MM.dd. HH:mm' }}</td>
   </ng-container>
 
-  <ng-container matColumnDef="passengerName">
-    <th mat-header-cell *matHeaderCellDef> Érkezési idő</th>
+  <ng-container matColumnDef="arrivalTIme">
+    <th mat-header-cell *matHeaderCellDef> Érkezés</th>
     <td mat-cell
-        *matCellDef="let element"> {{element.arriveTime.toMillis() | date:"YYYY.MM.dd. HH:mm"}} </td>
+        *matCellDef="let element"> {{ element.arriveTime.toMillis() | date:"MM.dd. HH:mm" }}
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row class="mat-row" *matRowDef="let row; columns: displayedColumns;" (click)="onClick(row)"></tr>
 
   <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" colspan="4">Nincs megjeleníthető adat</td>
+    <td id="no-data" class="mat-cell" colspan="4">Nincs megjeleníthető adat...</td>
   </tr>
 </table>

@@ -1,12 +1,10 @@
 <mat-card>
 
-
   <mat-card-content>
 
     <h3>REGISZTRÁCIÓ</h3>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
       <mat-form-field appearance="outline">
         <input
           matInput
@@ -15,7 +13,6 @@
           placeholder="Vezetéknév"
           autocomplete="off"
         />
-
         <mat-error *ngIf="lastNameControl.invalid && lastNameControl.touched">
           Kérjük, adja meg a vezetéknevét.
         </mat-error>
@@ -43,7 +40,6 @@
           placeholder="Email"
           autocomplete="off"
         />
-
         <mat-error *ngIf="emailControl.invalid && emailControl.touched">
           Kérjük, adjon meg egy valódi email címet.
         </mat-error>
@@ -92,12 +88,13 @@
         >
           Regisztráció
         </button>
-
       </div>
-
     </form>
 
-    <div>{{ this.serverMessage }}</div>
   </mat-card-content>
+
+  <mat-card-footer>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
 
 </mat-card>

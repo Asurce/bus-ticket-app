@@ -14,7 +14,6 @@
           placeholder="Email"
           autocomplete="off"
         />
-
         <mat-error *ngIf="emailControl.invalid && emailControl.touched">
           Kérjük, adjon meg egy valódi email címet.
         </mat-error>
@@ -50,12 +49,12 @@
         >
           Bejelentkezés
         </button>
-
       </div>
-
     </form>
-
-    <div>{{ this.serverMessage }}</div>
   </mat-card-content>
+
+  <mat-card-footer>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
 
 </mat-card>

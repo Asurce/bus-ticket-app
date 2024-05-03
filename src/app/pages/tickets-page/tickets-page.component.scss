@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  width: var(--login-width);
+  margin: auto;
+  padding: 2em 0;
+}
+
+tr:hover {
+  cursor: pointer;
+  filter: brightness(90%);
+}
+
+#no-data {
+  height: 54px;
+  text-align: center;
+}

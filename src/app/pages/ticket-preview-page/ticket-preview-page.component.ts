@@ -1,11 +1,11 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {MatCard, MatCardContent} from "@angular/material/card";
+import {MatCard, MatCardContent, MatCardFooter} from "@angular/material/card";
 import {MatDivider} from "@angular/material/divider";
 import {TicketService} from "../../shared/services/ticket.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {firstValueFrom} from "rxjs";
 import {Ticket} from "../../shared/models/Ticket";
-import {DatePipe, NgOptimizedImage} from "@angular/common";
+import {CommonModule, DatePipe, NgOptimizedImage} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {DiscountPipe} from "../../shared/pipes/discount.pipe";
 import {JourneyService} from "../../shared/services/journey.service";
@@ -17,11 +17,14 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {MatLabel} from "@angular/material/form-field";
 import {MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {Timestamp} from "firebase/firestore";
+import {MatProgressBar} from "@angular/material/progress-bar";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-ticket-preview-page',
   standalone: true,
   imports: [
+    CommonModule,
     MatCard,
     MatDivider,
     MatCardContent,
@@ -38,51 +41,49 @@ import {Timestamp} from "firebase/firestore";
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
-    MatDialogClose
+    MatDialogClose,
+    MatCardFooter,
+    MatProgressBar
   ],
   templateUrl: './ticket-preview-page.component.html',
   styleUrl: './ticket-preview-page.component.scss'
 })
 export class TicketPreviewPageComponent implements OnInit {
 
+  id: string = '';
   ticket!: Ticket;
-  modifyList: Journey[] = []
-  id: string | null = null;
-
-  @ViewChild('modifyDialog', { static: true }) modifyDialog!: TemplateRef<any>;
-
   modifyForm!: FormGroup;
+  modifyList: Journey[] = []
+
+  @ViewChild('modifyDialog', {static: true}) modifyDialog!: TemplateRef<any>;
 
   constructor(private ticketService: TicketService,
               private journeyService: JourneyService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private dialog: MatDialog
-  ) {
+              private dialog: MatDialog,
+              private snackService: MatSnackBar) {
   }
 
   ngOnInit() {
+    const urlID = this.activatedRoute.snapshot.paramMap.get('id')
+    if (urlID) {
+      this.id = urlID;
+    } else {
+      this.router.navigateByUrl('/tickets');
+    }
 
     this.modifyForm = new FormGroup({
-      newJourney: new FormControl('', [Validators.required])
+      time: new FormControl(null, [Validators.required])
     })
 
-    this.id = this.activatedRoute.snapshot.paramMap.get('id');
-
-    if (this.id === null) {
-      this.router.navigate(['/']).then();
-    } else {
-      firstValueFrom(this.ticketService.getTicketById(this.id)).then(fireTicket => {
-        if (fireTicket) {
-          this.ticket = {...fireTicket, ticketID: this.id!};
-          // TODO fix loading error
-        }
-      })
-    }
-  }
-
-  delete() {
-    this.ticketService.delete(this.ticket.ticketID).then(() => this.router.navigate(['/tickets']))
+    firstValueFrom(this.ticketService.getTicketById(this.id)).then(fireTicket => {
+      if (fireTicket) {
+        this.ticket = {...fireTicket, ticketID: this.id!};
+      } else {
+        this.router.navigateByUrl('/tickets');
+      }
+    })
   }
 
   async modify() {
@@ -92,29 +93,51 @@ export class TicketPreviewPageComponent implements OnInit {
 
     if (originCity && destCity) {
       let date: Date;
-      // TODO fix
-      if (new Date() > this.ticket.departTime.toDate()) {
-        date = this.ticket.departTime.toDate();
-        date.setHours(0);
-        date.setMinutes(0);
+      const today = new Date();
+      const ticketDate = this.ticket.departTime.toDate()
+
+      if (today > ticketDate) {
+        if (today.getDay() === ticketDate.getDay()) {
+          date = today;
+        } else {
+          this.errorSnack('A jegyet már nem lehet módosítani.');
+          return;
+        }
       } else {
-        date = this.ticket.departTime.toDate()
+        ticketDate.setHours(0)
+        ticketDate.setMinutes(0)
+        date = ticketDate
       }
 
-      this.journeyService.generateJourneys(originCity, destCity, date, true, this.ticket.discount).then(() => {
-        this.modifyList = this.journeyService.journeyList;
+      this.journeyService.generateJourneys(originCity, destCity, date, true, this.ticket.discount);
+      this.modifyList = this.journeyService.journeyList!;
+
+      if (this.modifyList!.length == 0) {
+        this.errorSnack('A jegyet már nem lehet módosítani.');
+      } else {
         const dialogRef = this.dialog.open(this.modifyDialog);
-
         dialogRef.afterClosed().subscribe(() => {
-          const formJourney: Journey = this.modifyForm.controls['newJourney'].value
-          this.ticket.departTime = Timestamp.fromDate(formJourney.departTime);
-          this.ticket.arriveTime = Timestamp.fromDate(formJourney.arriveTime);
-          this.ticketService.update(this.ticket).then(() => this.router.navigate(['/tickets/' + this.ticket.ticketID]));
+          if (this.modifyForm.valid) {
+            const formJourney: Journey = this.modifyForm.controls['time'].value
+            this.ticket.departTime = Timestamp.fromDate(formJourney.departTime);
+            this.ticket.arriveTime = Timestamp.fromDate(formJourney.arriveTime);
+            this.ticketService.update(this.ticket)
+              .then(() => this.router.navigate(['/tickets/' + this.ticket.ticketID]));
+          }
         })
-      })
-
+      }
     }
-
   }
 
+  delete() {
+    this.ticketService.delete(this.ticket.ticketID).then(() => this.router.navigate(['/tickets']))
+  }
+
+  errorSnack(message: string) {
+    this.snackService.open(message, 'OK', {
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      duration: 3000
+    })
+  }
 }

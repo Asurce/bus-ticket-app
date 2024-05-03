@@ -1,69 +1,89 @@
 <mat-card>
 
+  <mat-card-header>
+    <mat-card-title>BUSZJÁRAT KERESÉSE</mat-card-title>
+  </mat-card-header>
+
   <mat-card-content>
 
     <form [formGroup]="form" (ngSubmit)="generateJourneys()">
 
-      <mat-form-field appearance="outline">
-        <mat-label>Honnan</mat-label>
-        <input type="text"
-               matInput
-               formControlName="originCity"
-               [matAutocomplete]="originAutocomplete">
-        <mat-autocomplete #originAutocomplete="matAutocomplete" [displayWith]="cityToString">
-          @for (option of fromFilteredOptions | async; track option) {
-            <mat-option [value]="option">{{ option.name }}</mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
+      <div id="inputs">
+        <div id="fields">
+          <mat-form-field appearance="outline">
+            <mat-label>Honnan</mat-label>
+            <input type="text"
+                   matInput
+                   formControlName="originCity"
+                   [matAutocomplete]="originAutocomplete">
+            <mat-autocomplete #originAutocomplete="matAutocomplete" [displayWith]="cityToString">
+              @for (option of fromFilteredOptions | async; track option) {
+                <mat-option [value]="option">{{ option.name }}</mat-option>
+              }
+            </mat-autocomplete>
+            <mat-error *ngIf="originCityControl.invalid && originCityControl.touched">
+              Kérjük, válasszon.
+            </mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Hová</mat-label>
-        <input type="text"
-               matInput
-               formControlName="destCity"
-               [matAutocomplete]="destAutocomplete">
-        <mat-autocomplete #destAutocomplete="matAutocomplete" [displayWith]="cityToString">
-          @for (option of toFilteredOptions | async; track option) {
-            <mat-option [value]="option">{{ option.name }}</mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Hová</mat-label>
+            <input type="text"
+                   matInput
+                   formControlName="destCity"
+                   [matAutocomplete]="destAutocomplete">
+            <mat-autocomplete #destAutocomplete="matAutocomplete" [displayWith]="cityToString">
+              @for (option of toFilteredOptions | async; track option) {
+                <mat-option [value]="option">{{ option.name }}</mat-option>
+              }
+            </mat-autocomplete>
+            <mat-error *ngIf="destCityControl.invalid && destCityControl.touched">
+              Kérjük, válasszon.
+            </mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Mikor?</mat-label>
-        <input
-          matInput
-          [matDatepicker]="datePicker"
-          formControlName="date"
-        >
-        <mat-hint>ÉÉÉÉ/HH/NN</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
-        <mat-datepicker #datePicker></mat-datepicker>
-      </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Mikor?</mat-label>
+            <input
+              matInput
+              [matDatepicker]="datePicker"
+              formControlName="date"
+            >
+            <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker [touchUi]="isHandset$ | async" #datePicker></mat-datepicker>
+          </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Honnan</mat-label>
-        <input matInput
-               formControlName="time"
-               [format]="24"
-               [ngxMatTimepicker]="timePicker"/>
-        <mat-icon matSuffix (click)="timePicker.open()">watch_later</mat-icon>
-      </mat-form-field>
-      <ngx-mat-timepicker color="primary" #timePicker></ngx-mat-timepicker>
+          <mat-form-field appearance="outline">
+            <mat-label>Honnan</mat-label>
+            <input matInput
+                   formControlName="time"
+                   [format]="24"
+                   [ngxMatTimepicker]="timePicker"/>
+            <mat-icon matSuffix (click)="timePicker.open()">watch_later</mat-icon>
+            <ngx-mat-timepicker color="primary" #timePicker></ngx-mat-timepicker>
+          </mat-form-field>
+        </div>
 
-      <mat-radio-group formControlName="timeType">
-        <mat-radio-button [value]="true">indulás</mat-radio-button>
-        <mat-radio-button [value]="false">érkezés</mat-radio-button>
-      </mat-radio-group>
+        <div id="radios">
+          <label>Az időpont:</label>
+          <mat-radio-group formControlName="timeType">
+            <mat-radio-button [value]="true">indulás</mat-radio-button>
+            <mat-radio-button [value]="false">érkezés</mat-radio-button>
+          </mat-radio-group>
 
-      <mat-radio-group formControlName="discounts">
-        <mat-radio-button [value]="Discount.NONE">nincs</mat-radio-button>
-        <mat-radio-button [value]="Discount.STUDENT">50%</mat-radio-button>
-        <mat-radio-button [value]="Discount.WORKER">90%</mat-radio-button>
-      </mat-radio-group>
+          <label>Kedvezmények:</label>
+          <mat-radio-group formControlName="discounts">
+            <mat-radio-button [value]="Discount.NONE">nincs</mat-radio-button>
+            <mat-radio-button [value]="Discount.STUDENT">50%</mat-radio-button>
+            <mat-radio-button [value]="Discount.WORKER">90%</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
 
-      <button mat-raised-button type="submit" color="primary">Keresés</button>
+      <button mat-raised-button type="submit" color="primary">
+        <mat-icon>search</mat-icon>
+        KERESÉS
+      </button>
 
     </form>
 

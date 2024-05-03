@@ -2,8 +2,18 @@
   height: 100%;
 }
 
-div {
+.sidenav {
+  width: 70%;
+}
+
+#content {
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+mat-toolbar {
   display: flex;
+  flex-direction: row;
   align-items: center;
 
   h1 {
@@ -14,8 +24,19 @@ div {
 
   img {
     position: relative !important;
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
     margin-right: 15px;
+  }
+
+  #navigation{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    & a:last-of-type {
+      margin-left: 5em;
+    }
   }
 }

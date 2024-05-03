@@ -1,87 +1,62 @@
-<form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+<h1>Felhasználói profil</h1>
 
-  <mat-form-field appearance="outline">
-    <input
-      matInput
-      formControlName="lastName"
-      type="text"
-      placeholder="Vezetéknév"
-      autocomplete="off"
-    />
+<mat-card>
 
-    <mat-error *ngIf="lastNameControl.invalid && lastNameControl.touched">
-      Kérjük, adja meg a vezetéknevét.
-    </mat-error>
-  </mat-form-field>
+  <mat-card-header>
+    <mat-card-title>Személyes adatok</mat-card-title>
+  </mat-card-header>
 
-  <mat-form-field appearance="outline">
-    <input
-      matInput
-      formControlName="firstName"
-      type="text"
-      placeholder="Keresztnév"
-      autocomplete="off"
-    />
+  <mat-card-content>
 
-    <mat-error *ngIf="firstNameControl.invalid && firstNameControl.touched">
-      Kérjük, adja meg a keresztnevét.
-    </mat-error>
-  </mat-form-field>
+    <form *ngIf="userDataForm" [formGroup]="userDataForm" (ngSubmit)="userDataSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Vezetéknév</mat-label>
+        <input
+          matInput
+          formControlName="lastName"
+          type="text"
+          placeholder="Vezetéknév"
+          autocomplete="off"
+        />
+        <mat-error *ngIf="lastNameControl.invalid && lastNameControl.touched">
+          Kérjük, adja meg a vezetéknevét.
+        </mat-error>
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <input
-      matInput
-      formControlName="email"
-      type="email"
-      placeholder="Email"
-      [disabled]="true"
-    />
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Keresztnév</mat-label>
+        <input
+          matInput
+          formControlName="firstName"
+          type="text"
+          placeholder="Keresztnév"
+          autocomplete="off"
+        />
+        <mat-error *ngIf="firstNameControl.invalid && firstNameControl.touched">
+          Kérjük, adja meg a keresztnevét.
+        </mat-error>
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <input
-      matInput
-      formControlName="password"
-      type="password"
-      placeholder="Password"
-      autocomplete="off"
-    />
-    <mat-error *ngIf="passwordControl.invalid && passwordControl.touched">
-      A jelszónak legalább 6 karakter hosszúnak kell lennie.
-    </mat-error>
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          type="email"
+          placeholder="Email"
+        />
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <input
-      matInput
-      formControlName="passwordConfirm"
-      type="password"
-      placeholder="Password"
-      autocomplete="off"
-    />
-    <mat-error *ngIf="passwordConfirmControl.invalid && passwordConfirmControl.touched">
-      A jelszavaknak meg kell egyezniük.
-    </mat-error>
-  </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+      >
+        Módosítás
+      </button>
 
-  <div id="buttons">
-    <button
-      mat-stroked-button
-      type="button"
-      routerLink="/login"
-    >
-      Bejelentkezés
-    </button>
+    </form>
+  </mat-card-content>
+</mat-card>
 
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      [disabled]="!form.valid"
-    >
-      Regisztráció
-    </button>
 
-  </div>
-
-</form>

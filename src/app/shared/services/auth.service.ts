@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
-import {firstValueFrom} from "rxjs";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private auth: AngularFireAuth) {
+  constructor(private auth: AngularFireAuth,
+              private router: Router) {
   }
 
   login(email: string, password: string) {
@@ -18,19 +19,13 @@ export class AuthService {
     return this.auth.createUserWithEmailAndPassword(email, password);
   }
 
-  logout() {
-    return this.auth.signOut();
+  async logout() {
+    await this.auth.signOut();
+    return await this.router.navigateByUrl('/');
   }
 
   currentUser() {
     return this.auth.user;
-  }
-
-  changePassword(password: string) {
-    return firstValueFrom(this.currentUser()).then(user => {
-      user?.updatePassword(password);
-      this.logout().then();
-    })
   }
 
 }

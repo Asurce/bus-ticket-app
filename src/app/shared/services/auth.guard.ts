@@ -16,6 +16,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
 
 export const journeyGuard: CanActivateFn = (route, state) => {
   const redirect = inject(Router).createUrlTree(['/']);
-  return inject(JourneyService).journeyList.length == 0 ? redirect : true;
+  return inject(JourneyService).journeyList == null ? redirect : true;
 };
 

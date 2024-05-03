@@ -42,7 +42,7 @@ import {firstValueFrom} from "rxjs";
 export class TicketsPageComponent implements OnInit {
 
   tickets: Ticket[] = [];
-  displayedColumns = ["departureAirport", "destinationAirport", "departureDate", "passengerName"];
+  displayedColumns = ["originCity", "destCity", "departureTime", "arrivalTime"];
 
   constructor(private router: Router,
               private ticketService: TicketService,
@@ -58,6 +58,6 @@ export class TicketsPageComponent implements OnInit {
   }
 
   onClick(id: Ticket) {
-    this.router.navigate(["/tickets/" + id.ticketID]).then();
+    this.router.navigateByUrl("/tickets/" + id.ticketID);
   }
 }

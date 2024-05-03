@@ -14,7 +14,7 @@ export const routes: Routes = [
   {path: 'register', component: RegisterPageComponent, canActivate: [loginGuard]},
   {path: 'profile', component: ProfilePageComponent, canActivate: [authGuard]},
   {path: 'tickets', component: TicketsPageComponent, canActivate: [authGuard]},
-  {path: 'journey', component: JourneyPageComponent, canActivate: [authGuard, journeyGuard]},
+  {path: 'journey', component: JourneyPageComponent, canActivate: [journeyGuard]},
   {path: 'tickets/:id', component: TicketPreviewPageComponent, canActivate: [authGuard]},
   {path: '**', redirectTo: ''}
 ];

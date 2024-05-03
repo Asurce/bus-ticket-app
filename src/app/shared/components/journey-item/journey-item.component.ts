@@ -23,7 +23,7 @@ import {Ticket} from "../../models/Ticket";
 })
 export class JourneyItemComponent {
 
-  @Input({required: true}) journey!: Journey;
+  @Input({required: true}) journey!: Journey | null;
   @Output() purchase: EventEmitter<Journey> = new EventEmitter<Journey>();
 
 }

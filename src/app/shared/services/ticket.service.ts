@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {User} from "../models/User";
 import {FireTicket, Ticket} from "../models/Ticket";
 
 @Injectable({
@@ -9,8 +8,10 @@ import {FireTicket, Ticket} from "../models/Ticket";
 export class TicketService {
 
   ticketsCollection = 'tickets'
+  pendingTicket: FireTicket | null = null;
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor(private firestore: AngularFirestore) {
+  }
 
   create(ticket: FireTicket) {
     return this.firestore.collection<FireTicket>(this.ticketsCollection).add(ticket);
@@ -23,7 +24,6 @@ export class TicketService {
   }
 
   getTicketById(id: string) {
-    // TODO check user
     return this.firestore.collection<FireTicket>(this.ticketsCollection).doc(id).valueChanges();
   }
 
@@ -34,6 +34,15 @@ export class TicketService {
 
   delete(id: string) {
     return this.firestore.collection<FireTicket>(this.ticketsCollection).doc(id).delete();
+  }
+
+  resolvePendingPurchase(userID: string) {
+    if (this.pendingTicket) {
+      this.pendingTicket.userID = userID;
+      return this.create(this.pendingTicket)
+    }
+
+    return null;
   }
 
 }

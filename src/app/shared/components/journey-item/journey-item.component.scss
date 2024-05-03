@@ -6,15 +6,17 @@ mat-card {
   justify-content: center;
   border-left: 11px solid transparent;
   transition: border-left 0.25s;
+}
 
-  mat-card-content {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    align-content: center;
-    justify-content: center;
-    padding: 1.5em;
-  }
+
+mat-card-content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-content: center;
+  justify-content: center;
+  padding: 1.5em;
+  text-align: center;
 }
 
 mat-card:hover {
@@ -94,6 +96,36 @@ mat-card:hover {
 
   button {
     margin-top: 1em;
+  }
+
+}
+
+@media only screen and (max-width: 600px) {
+
+  :host {
+    font-size: 0.7rem;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1em;
+  }
+
+  .data {
+    width: 100%;
+  }
+
+  .purchase {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      align-self: flex-end;
+      margin: 0;
+    }
   }
 
 }

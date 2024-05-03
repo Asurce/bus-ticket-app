@@ -1,6 +1,6 @@
-import {Component, HostBinding, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatButton} from "@angular/material/button";
-import {MatCard, MatCardContent} from "@angular/material/card";
+import {MatCard, MatCardContent, MatCardFooter} from "@angular/material/card";
 import {MatError, MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
@@ -14,10 +14,12 @@ import {
   Validators
 } from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
-import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {AuthService} from "../../shared/services/auth.service";
 import {UserService} from "../../shared/services/user.service";
 import {User} from "../../shared/models/User";
+import {MatProgressBar} from "@angular/material/progress-bar";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {TicketService} from "../../shared/services/ticket.service";
 
 @Component({
   selector: 'app-register-page',
@@ -31,7 +33,9 @@ import {User} from "../../shared/models/User";
     MatInput,
     NgIf,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    MatCardFooter,
+    MatProgressBar
   ],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss'
@@ -40,13 +44,14 @@ export class RegisterPageComponent implements OnInit {
 
   form!: FormGroup;
   loading = false;
-  serverMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private snackService: MatSnackBar,
+    private ticketService: TicketService
   ) {
   }
 
@@ -61,22 +66,36 @@ export class RegisterPageComponent implements OnInit {
   }
 
   onSubmit() {
-    try {
-      this.authService.register(this.emailControl.value, this.passwordControl.value).then(value => {
-        const user: User = {
-          id: value.user!.uid,
-          email: this.emailControl.value,
-          name: {
-            firstName: this.firstNameControl.value,
-            lastName: this.lastNameControl.value
+    this.loading = true;
+    this.authService.register(this.emailControl.value, this.passwordControl.value).then(value => {
+      const user: User = {
+        id: value.user!.uid,
+        email: this.emailControl.value,
+        name: {
+          firstName: this.firstNameControl.value,
+          lastName: this.lastNameControl.value
+        }
+      }
+      this.userService.create(user).then(() => {
+        if (this.ticketService.pendingTicket) {
+          const resolve = this.ticketService.resolvePendingPurchase(value.user!.uid);
+          if (resolve) {
+            resolve.then(id => {
+              this.loading = false;
+              this.router.navigateByUrl('/tickets/' + id.id)
+            })
           }
         }
-        this.userService.create(user).then(() => this.router.navigate(['/']).then())
-
+        this.router.navigateByUrl('/');
       })
-    } catch (err) {
-      this.serverMessage = err as string;
-    }
+    }).catch(() => {
+      this.loading = false;
+      this.snackService.open('Van már ilyen email az adatbázisban.', 'OK', {
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        duration: 3000
+      });
+    })
   }
 
   matchValues(matchTo: string): (ac: AbstractControl) => ValidationErrors | null {
@@ -108,6 +127,4 @@ export class RegisterPageComponent implements OnInit {
   get passwordConfirmControl(): FormControl {
     return this.form.controls['passwordConfirm'] as FormControl;
   }
-
-
 }

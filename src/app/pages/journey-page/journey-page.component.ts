@@ -8,6 +8,7 @@ import {AuthService} from "../../shared/services/auth.service";
 import {firstValueFrom} from "rxjs";
 import {Router} from "@angular/router";
 import {Timestamp} from 'firebase/firestore';
+import {FireTicket} from "../../shared/models/Ticket";
 
 @Component({
   selector: 'app-journey-page',
@@ -21,7 +22,7 @@ import {Timestamp} from 'firebase/firestore';
 })
 export class JourneyPageComponent implements OnInit, OnDestroy {
 
-  journeyList: Journey[] = []
+  journeyList: Journey[] | null = null
 
   constructor(private journeyService: JourneyService,
               private ticketService: TicketService,
@@ -34,13 +35,12 @@ export class JourneyPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.journeyService.journeyList = [];
+    this.journeyService.journeyList = null;
   }
 
   async purchase(journey: Journey) {
-    let user = await firstValueFrom(this.authService.currentUser());
-
-    this.ticketService.create({
+    const user = await firstValueFrom(this.authService.currentUser());
+    let ticket: FireTicket = {
       originCity: journey.originCity.name,
       destCity: journey.destCity.name,
       departTime: Timestamp.fromDate(journey.departTime),
@@ -49,10 +49,18 @@ export class JourneyPageComponent implements OnInit, OnDestroy {
       distance: journey.distance,
       price: journey.price,
       discount: journey.discount,
-      userID: user!.uid
-    }).then(doc => {
-      this.router.navigate(['/tickets/' + doc.id])
-    })
+      userID: user?.uid ?? ''
+    }
+
+    if (user === null) {
+      this.ticketService.pendingTicket = ticket;
+      await this.router.navigateByUrl('/login')
+    } else {
+      this.ticketService.create(ticket).then(doc => {
+        this.router.navigateByUrl('/tickets/' + doc.id)
+      })
+    }
+
 
   }
 

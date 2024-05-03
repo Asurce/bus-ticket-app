@@ -1,9 +1,8 @@
-import {computed, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {City} from "../models/City";
 import {Discount, discountValues} from "../models/Discount";
 import {Journey} from "../models/Journey";
-import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +11,7 @@ export class JourneyService {
 
   citiesCollection = 'cities'
 
-  journeyList: Journey[] = [];
+  journeyList: Journey[] | null = null;
 
   constructor(private firestore: AngularFirestore) {
   }
@@ -21,8 +20,7 @@ export class JourneyService {
     return this.firestore.collection<City>(this.citiesCollection).valueChanges();
   }
 
-
-  async generateJourneys(originCity: City, destCity: City, dateTime: Date, isDepartDate: boolean, discount: Discount) {
+  generateJourneys(originCity: City, destCity: City, dateTime: Date, isDepartDate: boolean, discount: Discount) {
 
     // DISTANCE
     let distance: number;
@@ -78,7 +76,5 @@ export class JourneyService {
     }
 
     this.journeyList = journeyList;
-
-    console.log(journeyList)
   }
 }

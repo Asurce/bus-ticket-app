@@ -1,5 +1,5 @@
-<mat-card class="ticket-body">
-  <mat-card-content>
+<mat-card>
+  <mat-card-content *ngIf="ticket" class="ticket-body">
     <img ngSrc="../../../assets/qrcode.svg" height="132" width="132" alt="barcode" priority>
 
     <mat-divider/>
@@ -29,20 +29,29 @@
         <button mat-raised-button color="warn" (click)="delete()">TÖRLÉS</button>
         <button mat-raised-button color="primary" (click)="modify()">MÓDOSÍTÁS</button>
       </div>
-      <div class="price">{{ ticket.price }} Ft</div>
       <div>{{ ticket.discount | discount }}</div>
+      <div class="price">{{ ticket.price }} Ft</div>
     </div>
 
   </mat-card-content>
+
+  <mat-card-content style="text-align: center" *ngIf="!ticket">
+    Betöltés...
+  </mat-card-content>
+
+  <mat-card-footer>
+    <mat-progress-bar *ngIf="!ticket" mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
 </mat-card>
 
 <ng-template #modifyDialog>
-  <h2 matDialogTitle>Dialog!</h2>
+  <h2 matDialogTitle>Módosítás</h2>
   <mat-dialog-content>
-    <form [formGroup]="modifyForm">
-      <mat-form-field>
-        <mat-label>Favorite food</mat-label>
-        <mat-select formControlName="newJourney">
+    Csak az időponton módosíthat, az utazás napján nem.
+    <form style="margin-top: 1em" [formGroup]="modifyForm">
+      <mat-form-field style="width: 100%" appearance="outline">
+        <mat-label>Válasszon időpontot!</mat-label>
+        <mat-select formControlName="time">
           @for (journey of modifyList; track journey) {
             <mat-option [value]="journey">{{ journey.departTime | date:'YYYY.MM.dd. HH:mm' }}</mat-option>
           }
@@ -51,6 +60,7 @@
     </form>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button mat-button matDialogClose color="primary">OK</button>
+    <button mat-button matDialogClose>Mégsem</button>
+    <button mat-button matDialogClose color="primary" [disabled]="!modifyForm.valid">OK</button>
   </mat-dialog-actions>
 </ng-template>

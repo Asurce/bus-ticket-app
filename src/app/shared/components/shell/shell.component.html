@@ -1,4 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
+
   <mat-sidenav
     #drawer
     class="sidenav"
@@ -8,18 +9,17 @@
     [opened]="false">
 
     <mat-toolbar>Menü</mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item routerLink="/">Kezdőlap</a>
-      <a *ngIf="isLoggedIn" mat-list-item routerLink="/profile">Profil</a>
-      <a *ngIf="isLoggedIn" mat-list-item routerLink="/tickets">Jegyeim</a>
-      <a *ngIf="!isLoggedIn" mat-list-item routerLink="/login">Bejelentkezés</a>
-      <a *ngIf="isLoggedIn" mat-list-item (click)="logout()">Kijelentkezés</a>
-    </mat-nav-list>
 
+    <mat-nav-list>
+      <a mat-list-item routerLink="/" (click)="drawer.close()">Kezdőlap</a>
+      <a mat-list-item routerLink="/profile" (click)="drawer.close()">Profil</a>
+      <a mat-list-item routerLink="/tickets" (click)="drawer.close()">Jegyeim</a>
+      <a *ngIf="!isLoggedIn" mat-list-item routerLink="/login" (click)="drawer.close()">Bejelentkezés</a>
+      <a *ngIf="isLoggedIn" mat-list-item (click)="logout(); drawer.close()">Kijelentkezés</a>
+    </mat-nav-list>
   </mat-sidenav>
 
-  <mat-sidenav-content>
-
+  <mat-sidenav-content id="content">
     <mat-toolbar>
 
       <button
@@ -30,14 +30,21 @@
         <mat-icon>menu</mat-icon>
       </button>
 
-      <div *ngIf="!(isHandset$ | async)">
-        <img ngSrc="../../../../assets/bus_logo.png" alt="logo" height="256" width="256">
-        <h1 routerLink="/">BusTicketApp</h1>
+      <img ngSrc="assets/bus_logo.png" alt="logo" height="256" width="256">
+      <h1 routerLink="/">Bus Ticket App</h1>
+
+      <div id="navigation" *ngIf="!(isHandset$ | async)">
         <a mat-button routerLink="/">Kezdőlap</a>
-        <a *ngIf="isLoggedIn" mat-button routerLink="/profile">Profil</a>
-        <a *ngIf="isLoggedIn" mat-button routerLink="/tickets">Jegyeim</a>
-        <a *ngIf="!isLoggedIn" mat-button routerLink="/login">Bejelentkezés</a>
-        <a *ngIf="isLoggedIn" mat-button (click)="logout()">Kijelentkezés</a>
+        <a mat-button routerLink="/profile">Profil</a>
+        <a mat-button routerLink="/tickets">Jegyeim</a>
+        <a *ngIf="!isLoggedIn" mat-button routerLink="/login">
+          <mat-icon>account_circle</mat-icon>
+          Bejelentkezés
+        </a>
+        <a *ngIf="isLoggedIn" mat-button (click)="logout()">
+          <mat-icon>account_circle</mat-icon>
+          Kijelentkezés
+        </a>
       </div>
 
     </mat-toolbar>

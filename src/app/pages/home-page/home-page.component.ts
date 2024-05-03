@@ -1,22 +1,23 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatCard, MatCardContent} from "@angular/material/card";
-import {MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/material/autocomplete";
-import {map, Observable, startWith, Subject, takeUntil} from "rxjs";
+import {map, Observable, shareReplay, startWith, Subject, takeUntil} from "rxjs";
 import {CommonModule} from "@angular/common";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {MatButton} from "@angular/material/button";
-import {AuthService} from "../../shared/services/auth.service";
 import {JourneyService} from "../../shared/services/journey.service";
 import {Router} from "@angular/router";
 import {City} from "../../shared/models/City";
 import {NgxMatTimepickerComponent, NgxMatTimepickerDirective} from "ngx-mat-timepicker";
 import {MatIcon} from "@angular/material/icon";
 import {Discount} from "../../shared/models/Discount";
+import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-home-page',
@@ -42,7 +43,10 @@ import {Discount} from "../../shared/models/Discount";
     MatButton,
     NgxMatTimepickerComponent,
     MatIcon,
-    NgxMatTimepickerDirective
+    NgxMatTimepickerDirective,
+    MatCardHeader,
+    MatCardTitle,
+    MatError
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
@@ -54,12 +58,17 @@ export class HomePageComponent implements OnInit, OnDestroy {
   fromFilteredOptions!: Observable<City[]>;
   toFilteredOptions!: Observable<City[]>;
 
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Handset])
+    .pipe(map(result => result.matches), shareReplay());
+
   unsubscribe: Subject<boolean> = new Subject<boolean>();
 
   constructor(
+    private router: Router,
     private formBuilder: FormBuilder,
     private journeyService: JourneyService,
-    private router: Router
+    private breakpointObserver: BreakpointObserver,
+    private snackService: MatSnackBar
   ) {
   }
 
@@ -79,7 +88,10 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.journeyService.getCities().pipe(takeUntil(this.unsubscribe)).subscribe(cities => {
       this.fromFilteredOptions = this.originCityControl.valueChanges.pipe(
         startWith(''),
-        map(value => this.filterOptions(value || '', cities)),
+        map(value => {
+          console.log(value)
+          return this.filterOptions(value || '', cities)
+        }),
       );
       this.toFilteredOptions = this.destCityControl.valueChanges.pipe(
         startWith(''),
@@ -94,18 +106,31 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   generateJourneys() {
-    let dateTime: Date = this.dateControl.value;
-    let time: string[] = this.timeControl.value.split(":");
-    dateTime.setHours(parseInt(time[0]));
-    dateTime.setMinutes(parseInt(time[1]));
+    this.form.markAllAsTouched();
 
-    this.journeyService.generateJourneys(
-      this.originCityControl.value,
-      this.destCityControl.value,
-      dateTime,
-      this.timeTypeControl.value,
-      this.discountsControl.value
-    ).then(() => this.router.navigate(['/journey']))
+    if (this.originCityControl.value == this.destCityControl.value) {
+      this.snackService.open('Kérjük, válasszon különböző városokat.', 'OK', {
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        duration: 3000
+      });
+      return;
+    } else if (this.form.valid) {
+      let dateTime: Date = this.dateControl.value;
+      let time: string[] = this.timeControl.value.split(":");
+      dateTime.setHours(parseInt(time[0]));
+      dateTime.setMinutes(parseInt(time[1]));
+
+      this.journeyService.generateJourneys(
+        this.originCityControl.value,
+        this.destCityControl.value,
+        dateTime,
+        this.timeTypeControl.value,
+        this.discountsControl.value
+      );
+
+      this.router.navigate(['/journey']).then()
+    }
   }
 
   cityToString(city: City) {
@@ -137,7 +162,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   private filterOptions(value: string | City, collection: City[]): City[] {
-    const filterValue = (value as City).name ? (value as City).name : (value as string);
+    const filterValue = (value as City).name ? '' : (value as string).toLowerCase();
     return collection.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 

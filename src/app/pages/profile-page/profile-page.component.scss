@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  gap: 3em;
+  flex-direction: column;
+  width: var(--login-width);
+  margin: auto;
+  padding: 2em 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 1em;
+  margin-top: 1em;
+}
