@@ -1,33 +1,30 @@
-:host {
-  display: flex;
-  gap: 20px;
-  flex-direction: column;
-  width: var(--login-width);
-  margin: auto;
-}
-
 mat-card {
-  padding: 1em;
-}
-
-mat-card-content {
   display: flex;
-  flex-direction: column;
-  gap: 2em;
+  flex-direction: row;
+  width: 100%;
+  align-content: center;
+  justify-content: center;
+  border-left: 11px solid transparent;
+  transition: border-left 0.25s;
+
+  mat-card-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    padding: 1.5em;
+  }
 }
 
-img {
-  position: relative !important;
-  width: 60%;
-  margin: auto;
-  height: auto;
+mat-card:hover {
+  border-left: 11px solid var(--primary);
 }
 
 .data {
   display: flex;
+  width: 80%;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   gap: 2em;
 
   .origin {
@@ -75,14 +72,28 @@ img {
   .city {
     font-size: 1.2em;
   }
+}
 
-  button {
-    margin-right: 1em;
-  }
+.purchase {
+  display: inline-flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2em;
 
   .price {
     font-size: 2em;
     font-weight: bold;
     line-height: 1em;
   }
+  .discount {
+    font-size: 0.8em;
+    color: gray;
+  }
+
+  button {
+    margin-top: 1em;
+  }
+
 }

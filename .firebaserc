@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "angularbusticketapp": {
+      "hosting": {
+        "bus-ticket-app": [
+          "angularbusticketapp"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "angularbusticketapp"
+  }
+}

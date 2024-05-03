@@ -1,1 +1,3 @@
-<p>journey-page works!</p>
+@for (journey of journeyList; track journey) {
+  <app-journey-item [journey]="journey" (purchase)="purchase($event)"></app-journey-item>
+}

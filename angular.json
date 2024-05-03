@@ -96,6 +96,23 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "version": 2
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "bus-ticket-app:build:production",
+              "serveTarget": "bus-ticket-app:serve:production"
+            },
+            "development": {
+              "buildTarget": "bus-ticket-app:build:development",
+              "serveTarget": "bus-ticket-app:serve:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }

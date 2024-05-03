@@ -1,1 +1,87 @@
-<p>profile-page works!</p>
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <mat-form-field appearance="outline">
+    <input
+      matInput
+      formControlName="lastName"
+      type="text"
+      placeholder="Vezetéknév"
+      autocomplete="off"
+    />
+
+    <mat-error *ngIf="lastNameControl.invalid && lastNameControl.touched">
+      Kérjük, adja meg a vezetéknevét.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <input
+      matInput
+      formControlName="firstName"
+      type="text"
+      placeholder="Keresztnév"
+      autocomplete="off"
+    />
+
+    <mat-error *ngIf="firstNameControl.invalid && firstNameControl.touched">
+      Kérjük, adja meg a keresztnevét.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <input
+      matInput
+      formControlName="email"
+      type="email"
+      placeholder="Email"
+      [disabled]="true"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <input
+      matInput
+      formControlName="password"
+      type="password"
+      placeholder="Password"
+      autocomplete="off"
+    />
+    <mat-error *ngIf="passwordControl.invalid && passwordControl.touched">
+      A jelszónak legalább 6 karakter hosszúnak kell lennie.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <input
+      matInput
+      formControlName="passwordConfirm"
+      type="password"
+      placeholder="Password"
+      autocomplete="off"
+    />
+    <mat-error *ngIf="passwordConfirmControl.invalid && passwordConfirmControl.touched">
+      A jelszavaknak meg kell egyezniük.
+    </mat-error>
+  </mat-form-field>
+
+  <div id="buttons">
+    <button
+      mat-stroked-button
+      type="button"
+      routerLink="/login"
+    >
+      Bejelentkezés
+    </button>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!form.valid"
+    >
+      Regisztráció
+    </button>
+
+  </div>
+
+</form>

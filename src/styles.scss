@@ -1,2 +1,11 @@
+@use '@angular/material' as mat;
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root {
+  --login-width: 30%;
+  --limit-width: 70%;
+
+  --primary: #475cb5;
+}

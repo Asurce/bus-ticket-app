@@ -1,11 +1,12 @@
-import {Component, HostBinding, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatError, MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {CommonModule} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent} from "@angular/material/card";
-import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
+import {AuthService} from "../../shared/services/auth.service";
+import {Router, RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-login-page',
@@ -18,7 +19,8 @@ import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
     MatButton,
     MatCard,
     MatError,
-    MatCardContent
+    MatCardContent,
+    RouterLink
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
@@ -29,13 +31,12 @@ export class LoginPageComponent implements OnInit {
   loading = false;
   serverMessage: string = '';
 
-  @HostBinding('style.width')
-  isHandset = this.breakpointObserver.isMatched(Breakpoints.Handset) ? '90%' : '30%';
-
   constructor(
     private formBuilder: FormBuilder,
-    private breakpointObserver: BreakpointObserver
-  ) {}
+    private authService: AuthService,
+    private router: Router
+  ) {
+  }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -45,6 +46,15 @@ export class LoginPageComponent implements OnInit {
   }
 
   onSubmit() {
+    try {
+      this.authService.login(this.emailControl.value, this.passwordControl.value).then(async () => {
+        console.log('asdasd')
+        this.router.navigate(['/']).then()
+      })
+    } catch (err) {
+      this.serverMessage = err as string;
+    }
+
 
   }
 

@@ -1,1 +1,56 @@
-<p>ticket-preview-page works!</p>
+<mat-card class="ticket-body">
+  <mat-card-content>
+    <img ngSrc="../../../assets/qrcode.svg" height="132" width="132" alt="barcode" priority>
+
+    <mat-divider/>
+
+    <div class="data">
+      <div class="origin">
+        <div class="date">{{ ticket.departTime.toMillis() | date:'YYYY.MM.dd.' }}</div>
+        <div class="hour">{{ ticket.departTime.toMillis() | date:'HH:mm' }}</div>
+        <div class="city">{{ ticket.originCity }}</div>
+      </div>
+      <div class="journey">
+        <div>{{ ticket.distance }} km</div>
+        <div class="journey-line"></div>
+        <div>{{ ticket.travelTime }} perc</div>
+      </div>
+      <div class="destination">
+        <div class="date">{{ ticket.arriveTime.toMillis() | date:'YYYY.MM.dd.' }}</div>
+        <div class="hour">{{ ticket.arriveTime.toMillis() | date:'HH:mm' }}</div>
+        <div class="city">{{ ticket.destCity }}</div>
+      </div>
+    </div>
+
+    <mat-divider/>
+
+    <div class="data">
+      <div id="buttons">
+        <button mat-raised-button color="warn" (click)="delete()">TÖRLÉS</button>
+        <button mat-raised-button color="primary" (click)="modify()">MÓDOSÍTÁS</button>
+      </div>
+      <div class="price">{{ ticket.price }} Ft</div>
+      <div>{{ ticket.discount | discount }}</div>
+    </div>
+
+  </mat-card-content>
+</mat-card>
+
+<ng-template #modifyDialog>
+  <h2 matDialogTitle>Dialog!</h2>
+  <mat-dialog-content>
+    <form [formGroup]="modifyForm">
+      <mat-form-field>
+        <mat-label>Favorite food</mat-label>
+        <mat-select formControlName="newJourney">
+          @for (journey of modifyList; track journey) {
+            <mat-option [value]="journey">{{ journey.departTime | date:'YYYY.MM.dd. HH:mm' }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button matDialogClose color="primary">OK</button>
+  </mat-dialog-actions>
+</ng-template>

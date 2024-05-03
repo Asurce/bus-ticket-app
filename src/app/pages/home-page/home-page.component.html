@@ -2,54 +2,65 @@
 
   <mat-card-content>
 
-    <form [formGroup]="form">
+    <form [formGroup]="form" (ngSubmit)="generateJourneys()">
 
-      <mat-form-field>
-        <mat-label>Hová</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>Honnan</mat-label>
         <input type="text"
                matInput
-               formControlName="from"
-               [matAutocomplete]="fromWhere">
-        <mat-autocomplete #fromWhere="matAutocomplete">
+               formControlName="originCity"
+               [matAutocomplete]="originAutocomplete">
+        <mat-autocomplete #originAutocomplete="matAutocomplete" [displayWith]="cityToString">
           @for (option of fromFilteredOptions | async; track option) {
-            <mat-option [value]="option">{{option}}</mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Hová</mat-label>
-        <input type="text"
-               matInput
-               formControlName="to"
-               [matAutocomplete]="toWhere">
-        <mat-autocomplete #toWhere="matAutocomplete">
-          @for (option of toFilteredOptions | async; track option) {
-            <mat-option [value]="option">{{option}}</mat-option>
+            <mat-option [value]="option">{{ option.name }}</mat-option>
           }
         </mat-autocomplete>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Hová</mat-label>
+        <input type="text"
+               matInput
+               formControlName="destCity"
+               [matAutocomplete]="destAutocomplete">
+        <mat-autocomplete #destAutocomplete="matAutocomplete" [displayWith]="cityToString">
+          @for (option of toFilteredOptions | async; track option) {
+            <mat-option [value]="option">{{ option.name }}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
         <mat-label>Mikor?</mat-label>
         <input
           matInput
-          [matDatepicker]="picker"
-          formControlName="when"
+          [matDatepicker]="datePicker"
+          formControlName="date"
         >
         <mat-hint>ÉÉÉÉ/HH/NN</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
       </mat-form-field>
 
+      <mat-form-field appearance="outline">
+        <mat-label>Honnan</mat-label>
+        <input matInput
+               formControlName="time"
+               [format]="24"
+               [ngxMatTimepicker]="timePicker"/>
+        <mat-icon matSuffix (click)="timePicker.open()">watch_later</mat-icon>
+      </mat-form-field>
+      <ngx-mat-timepicker color="primary" #timePicker></ngx-mat-timepicker>
+
       <mat-radio-group formControlName="timeType">
-        <mat-radio-button value="departure">indulás</mat-radio-button>
-        <mat-radio-button value="arrival">érkezés</mat-radio-button>
+        <mat-radio-button [value]="true">indulás</mat-radio-button>
+        <mat-radio-button [value]="false">érkezés</mat-radio-button>
       </mat-radio-group>
 
       <mat-radio-group formControlName="discounts">
-        <mat-radio-button value="none">nincs</mat-radio-button>
-        <mat-radio-button value="50">50%</mat-radio-button>
-        <mat-radio-button value="90">90%</mat-radio-button>
+        <mat-radio-button [value]="Discount.NONE">nincs</mat-radio-button>
+        <mat-radio-button [value]="Discount.STUDENT">50%</mat-radio-button>
+        <mat-radio-button [value]="Discount.WORKER">90%</mat-radio-button>
       </mat-radio-group>
 
       <button mat-raised-button type="submit" color="primary">Keresés</button>

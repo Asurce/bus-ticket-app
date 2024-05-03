@@ -1,13 +1,12 @@
 <mat-card>
 
-
   <mat-card-content>
 
     <h3>BEJELENTKEZÉS</h3>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <input
           matInput
           formControlName="email"
@@ -21,7 +20,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <input
           matInput
           formControlName="password"
@@ -34,15 +33,25 @@
         </mat-error>
       </mat-form-field>
 
-      <button
-        id="login-button"
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="(emailControl.invalid || passwordControl.invalid) || loading"
-      >
-        Bejelentkezés
-      </button>
+      <div id="buttons">
+        <button
+          mat-stroked-button
+          type="button"
+          routerLink="/register"
+        >
+          Regisztráció
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="!form.valid || loading"
+        >
+          Bejelentkezés
+        </button>
+
+      </div>
 
     </form>
 
