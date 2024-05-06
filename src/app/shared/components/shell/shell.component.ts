@@ -2,7 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/
 import {MatSidenav, MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
 import {MatToolbar} from "@angular/material/toolbar";
 import {MatAnchor, MatIconButton} from "@angular/material/button";
-import {ActivatedRoute, NavigationEnd, Router, RouterLink} from "@angular/router";
+import {NavigationEnd, Router, RouterLink} from "@angular/router";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {filter, map, Observable, shareReplay} from "rxjs";
 import {CommonModule, NgOptimizedImage} from "@angular/common";
@@ -43,7 +43,6 @@ export class ShellComponent implements OnInit, AfterViewInit {
     protected router: Router,
     protected authService: AuthService,
     private elementRef: ElementRef,
-    private activatedRoute: ActivatedRoute
   ) {
   }
 
@@ -69,9 +68,7 @@ export class ShellComponent implements OnInit, AfterViewInit {
       .subscribe(url => {
         const sidenavContent = document.getElementById('content');
 
-        console.log(url)
-
-        switch(url.url) {
+        switch (url.url) {
           case ('/'): {
             sidenavContent!.style.backgroundImage = 'url(assets/bg.jpg)';
             break;

@@ -88,10 +88,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this.journeyService.getCities().pipe(takeUntil(this.unsubscribe)).subscribe(cities => {
       this.fromFilteredOptions = this.originCityControl.valueChanges.pipe(
         startWith(''),
-        map(value => {
-          console.log(value)
-          return this.filterOptions(value || '', cities)
-        }),
+        map(value => this.filterOptions(value || '', cities)),
       );
       this.toFilteredOptions = this.destCityControl.valueChanges.pipe(
         startWith(''),

@@ -1,13 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators
-} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../shared/services/user.service";
 import {AuthService} from "../../shared/services/auth.service";
 import {firstValueFrom} from "rxjs";
@@ -16,7 +8,7 @@ import {MatInput} from "@angular/material/input";
 import {CommonModule} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {RouterLink} from "@angular/router";
-import {MatCard, MatCardContent, MatCardHeader, MatCardModule, MatCardTitle} from "@angular/material/card";
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -65,7 +57,6 @@ export class ProfilePageComponent implements OnInit {
 
   userDataSubmit() {
     if (this.userDataForm.valid) {
-      console.log(this.currentUser)
       this.userService.update({
         email: this.currentUser!.email!,
         name: {firstName: this.firstNameControl.value, lastName: this.lastNameControl.value},

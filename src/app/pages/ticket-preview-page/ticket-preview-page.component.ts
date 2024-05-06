@@ -96,17 +96,21 @@ export class TicketPreviewPageComponent implements OnInit {
       const today = new Date();
       const ticketDate = this.ticket.departTime.toDate()
 
-      if (today > ticketDate) {
+      if (today < ticketDate) {
+        if (today.getDay() === ticketDate.getDay()) {
+          date = today;
+        } else {
+          ticketDate.setHours(0)
+          ticketDate.setMinutes(0)
+          date = ticketDate
+        }
+      } else {
         if (today.getDay() === ticketDate.getDay()) {
           date = today;
         } else {
           this.errorSnack('A jegyet már nem lehet módosítani.');
           return;
         }
-      } else {
-        ticketDate.setHours(0)
-        ticketDate.setMinutes(0)
-        date = ticketDate
       }
 
       this.journeyService.generateJourneys(originCity, destCity, date, true, this.ticket.discount);

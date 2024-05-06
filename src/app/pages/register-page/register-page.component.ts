@@ -59,7 +59,7 @@ export class RegisterPageComponent implements OnInit {
     this.form = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       passwordConfirm: ['', [Validators.required, this.matchValues('password')]]
     })
@@ -90,7 +90,7 @@ export class RegisterPageComponent implements OnInit {
       })
     }).catch(() => {
       this.loading = false;
-      this.snackService.open('Van már ilyen email az adatbázisban.', 'OK', {
+      this.snackService.open('Ez az email már foglalt.', 'OK', {
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
         duration: 3000

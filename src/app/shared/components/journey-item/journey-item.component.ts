@@ -5,7 +5,6 @@ import {MatCard, MatCardContent} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton} from "@angular/material/button";
 import {DiscountPipe} from "../../pipes/discount.pipe";
-import {Ticket} from "../../models/Ticket";
 
 @Component({
   selector: 'app-journey-item',
