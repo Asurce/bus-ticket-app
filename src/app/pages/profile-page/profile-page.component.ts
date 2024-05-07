@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../shared/services/user.service";
 import {AuthService} from "../../shared/services/auth.service";
@@ -7,9 +7,12 @@ import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {CommonModule} from "@angular/common";
 import {MatButton} from "@angular/material/button";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MatOption} from "@angular/material/autocomplete";
+import {MatSelect} from "@angular/material/select";
 
 @Component({
   selector: 'app-profile-page',
@@ -26,21 +29,30 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     MatCardContent,
     MatCardHeader,
     MatLabel,
-    MatCardTitle
+    MatCardTitle,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+    MatOption,
+    MatSelect
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.scss'
 })
 export class ProfilePageComponent implements OnInit {
 
-  currentUser: firebase.default.User | null = null;
+  @ViewChild('confirmDialog', {static: true}) modifyDialog!: TemplateRef<any>;
 
+  currentUser: firebase.default.User | null = null;
   userDataForm!: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
               private authService: AuthService,
-              private snackService: MatSnackBar) {
+              private snackService: MatSnackBar,
+              private dialog: MatDialog,
+              private router: Router) {
   }
 
   async ngOnInit() {
@@ -69,6 +81,18 @@ export class ProfilePageComponent implements OnInit {
         })
       })
     }
+  }
+
+  delete() {
+    const dialogRef = this.dialog.open(this.modifyDialog);
+    dialogRef.afterClosed().subscribe(async value => {
+      if (value) {
+        await this.userService.delete(this.currentUser!.uid);
+        await this.authService.delete();
+        await this.router.navigateByUrl('/');
+      }
+    })
+
   }
 
   get lastNameControl(): FormControl {

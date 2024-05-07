@@ -55,8 +55,24 @@
         Módosítás
       </button>
 
+      <button
+        mat-raised-button
+        color="warn"
+        type="button"
+        (click)="delete()"
+      >
+        Fiók törlése
+      </button>
+
     </form>
   </mat-card-content>
 </mat-card>
 
+<ng-template #confirmDialog>
+  <h2 matDialogTitle>Biztosan töröli a fiókot?</h2>
+  <mat-dialog-actions align="end">
+    <button mat-button color="primary" matDialogClose>Mégsem</button>
+    <button mat-button color="warn" [mat-dialog-close]="true">Igen</button>
+  </mat-dialog-actions>
+</ng-template>
 

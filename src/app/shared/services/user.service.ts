@@ -23,7 +23,10 @@ export class UserService {
   }
 
   update(user: User) {
-    const query = this.firestore.collection<User>(this.usersCollection, ref => ref.where('id', '==', user.id).limit(1)).get();
+    const query = this.firestore.collection<User>(this.usersCollection, ref => {
+      return ref.where('id', '==', user.id).limit(1)
+    }).get();
+
     return query.forEach(snapshot => {
       snapshot.docs.forEach(doc => {
         const userDocRef = this.firestore.collection('users').doc(doc.id);
@@ -33,7 +36,16 @@ export class UserService {
   }
 
   delete(id: string) {
-    return this.firestore.collection<User>(this.usersCollection).doc(id).delete();
+    const query = this.firestore.collection<User>(this.usersCollection, ref => {
+      return ref.where('id', '==', id).limit(1)
+    }).get();
+
+    return query.forEach(snapshot => {
+      snapshot.docs.forEach(doc => {
+        const userDocRef = this.firestore.collection('users').doc(doc.id);
+        return userDocRef.delete();
+      });
+    });
   }
 
 }
