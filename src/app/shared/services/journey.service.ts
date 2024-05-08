@@ -55,7 +55,8 @@ export class JourneyService {
       variableDate.setHours(dateTime.getHours() + (dateTime.getMinutes() < departMinutes ? 0 : 1));
       variableDate.setMinutes(departMinutes);
     } else {
-      variableDate.setHours(2);
+      const now: Date = new Date();
+      variableDate.setHours(now.getHours() + (now.getMinutes() < departMinutes ? 0 : 1));
       variableDate.setMinutes(departMinutes);
     }
 
