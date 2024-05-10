@@ -1,6 +1,5 @@
-@for (journey of journeyList; track journey) {
-  <app-journey-item [journey]="journey" (purchase)="purchase($event)"></app-journey-item>
-}
+<app-journey-item *ngFor="let journey of journeyList" [journey]="journey"
+                  (purchase)="purchase($event)"></app-journey-item>
 
 <ng-container *ngIf="journeyList?.length == 0">
   <app-journey-item [journey]="null" (purchase)="purchase($event)"></app-journey-item>
